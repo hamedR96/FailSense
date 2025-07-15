@@ -1,0 +1,17 @@
+Confusion Matrix:
+TP: 87, FP: 17, FN: 19, TN: 80
+
+Accuracy: 0.8227
+Precision: 0.8365
+Recall: 0.8208
+F1 Score: 0.8286
+
+Classification Report:
+              precision    recall  f1-score   support
+
+        fail       0.81      0.82      0.82        97
+     success       0.84      0.82      0.83       106
+
+    accuracy                           0.82       203
+   macro avg       0.82      0.82      0.82       203
+weighted avg       0.82      0.82      0.82       203

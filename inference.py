@@ -5,6 +5,9 @@ import os
 from datetime import datetime
 from peft import PeftModel
 
+from load_dataset import load_data
+
+
 def process_input(images, text):
     if not isinstance(images, list):
         prompt = "<image> evaluate en " + text
@@ -157,3 +160,45 @@ def batch_inference(model_id, dataset, batch_size=4, device="cuda", output_dir="
     print(f"Accuracy: {accuracy:.2f}%")
 
     return predictions, labels
+
+class FSI:
+    def __init__(self, model_id: str, device: str = "cuda"):
+        self.device = torch.device(device)
+        self.processor = AutoProcessor.from_pretrained("google/paligemma2-3b-mix-224")
+        print("✓ Processor loaded")
+
+        base_model = PaliGemmaForConditionalGeneration.from_pretrained(
+            "google/paligemma2-3b-mix-224",
+            device_map=self.device
+        )
+        self.model = PeftModel.from_pretrained(base_model, model_id).eval()
+        print("✓ Model loaded")
+
+    def run(self, images, task: str) -> str:
+        prompt = process_input(images, task)
+        model_inputs = self.processor(text=prompt, images=images, return_tensors="pt").to(self.model.device)
+
+        input_len = model_inputs["input_ids"].shape[-1]
+        with torch.inference_mode():
+            generation = self.model.generate(
+                **model_inputs,
+                max_new_tokens=100,
+                do_sample=False
+            )
+            generation = generation[0][input_len:]
+            decoded = self.processor.decode(generation, skip_special_tokens=True)
+        return decoded
+
+
+
+if __name__ == "__main__":
+    #Load Model:
+    model = FSI("ACIDE_1/FailSense-Video-Calvin-2p-3b", device="mps")
+    # Load dataset
+    dataset = load_data(dataset_name="calvin", style="video", split="test", pov=2, num_entry=2)
+    for d in dataset:
+        images=d["images"]
+        task=d["task"]
+        result = model.run(images,task)
+        print(result)
+

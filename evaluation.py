@@ -5,10 +5,10 @@ import torch
 
 if __name__ == '__main__':
 
-    model_ids = ["ACIDE/FailSense-AHA-Calvin-1p-3b",
-                "ACIDE/FailSense-AHA-Calvin-2p-3b",
-                "ACIDE/FailSense-Video-Calvin-1p-3b",
-                "ACIDE/FailSense-Video-Calvin-2p-3b"
+    model_ids = ["ACIDE_1/FailSense-AHA-Calvin-1p-3b",
+                "ACIDE_1/FailSense-AHA-Calvin-2p-3b",
+                "ACIDE_1/FailSense-Video-Calvin-1p-3b",
+                "ACIDE_1/FailSense-Video-Calvin-2p-3b"
                 ]
 
     dataset_names = ["droid",

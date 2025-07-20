@@ -14,17 +14,23 @@ def visualization_report(labels, predictions, model_name, output_dir="./results"
     os.makedirs(output_dir, exist_ok=True)
 
     # Convert string labels to binary
-    y_true = [1 if label == "success" else 0 for label in labels]
-    y_pred = [1 if pred == "success" else 0 for pred in predictions]
+    y_true = [1 if label in ("success","1",1) else 0 for label in labels]
+    y_pred = [1 if pred in ("success","1",1) else 0 for pred in predictions]
 
     # Compute confusion matrix and metrics
-    cm = confusion_matrix(y_true, y_pred)
+    cm = confusion_matrix(y_true, y_pred, labels=[0, 1])
     tn, fp, fn, tp = cm.ravel()
     accuracy = accuracy_score(y_true, y_pred)
     precision = precision_score(y_true, y_pred, zero_division=0)
     recall = recall_score(y_true, y_pred, zero_division=0)
     f1 = f1_score(y_true, y_pred, zero_division=0)
-    report = classification_report(y_true, y_pred, target_names=["fail", "success"])
+    report = classification_report(
+        y_true,
+        y_pred,
+        labels=[0, 1],
+        target_names=["fail", "success"],
+        zero_division=0
+    )
 
     # Save results to .txt
     txt_path = os.path.join(output_dir, f"{model_name}_results.txt")

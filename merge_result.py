@@ -1,8 +1,8 @@
 import os
 
 # Path to the folder with your .txt files
-folder_path = './results'  # <- Replace with your actual folder path
-output_file = 'merged_output.txt'
+folder_path = './classifier_results'  # <- Replace with your actual folder path
+output_file = 'classifier_merged_output.txt'
 
 # Open the output file in write mode
 with open(output_file, 'w', encoding='utf-8') as outfile:
